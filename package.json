@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-worker",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "a rollup plugin for worker",
   "main": "src/index.js",
   "types": "typings/index.d.ts",
@@ -27,6 +27,6 @@
     "rollup": "^2.26.3"
   },
   "dependencies": {
-    "rollup-plugin-minize": "^1.1.0"
+    "uglify-js": "^3.10.1"
   }
 }

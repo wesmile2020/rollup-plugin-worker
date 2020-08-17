@@ -1,5 +1,6 @@
 const path = require('path');
 const rollup = require('rollup');
+const uglify = require('uglify-js');
 
 const defaultOptions = {
     prefix: 'worker!',
@@ -46,10 +47,11 @@ function rollupWorker(options = {}) {
                         for (let i = 0; i < deps.length; i += 1) {
                             this.addWatchFile(deps[i]);
                         }
+                        const workerCode = opts.uglify ? uglify.minify(chunk.code) : chunk.code;
                         const code = [
                             `import createWorker from 'rollup-plugin-worker/lib/worker-helper'`,
                             `export default createWorker(`,
-                            JSON.stringify(chunk.code),
+                            JSON.stringify(workerCode),
                             `)`,
                         ];
                         return Promise.resolve(code.join('\n'));
