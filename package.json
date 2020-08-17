@@ -1,8 +1,9 @@
 {
   "name": "rollup-plugin-worker",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "a rollup plugin for worker",
   "main": "src/index.js",
+  "types": "typings/index.d.ts",
   "directories": {
     "lib": "lib"
   },
