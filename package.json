@@ -1,0 +1,31 @@
+{
+  "name": "rollup-plugin-worker",
+  "version": "2.0.0",
+  "description": "a rollup plugin for worker",
+  "main": "src/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wesmile2020/rollup-plugin-worker.git"
+  },
+  "keywords": [
+    "rollup-plugin-worker"
+  ],
+  "author": "lei.li",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wesmile2020/rollup-plugin-worker/issues"
+  },
+  "homepage": "https://github.com/wesmile2020/rollup-plugin-worker#readme",
+  "peerDependencies": {
+    "rollup": "^2.26.3"
+  },
+  "dependencies": {
+    "rollup-plugin-minize": "^1.1.0"
+  }
+}
