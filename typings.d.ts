@@ -6,4 +6,7 @@ interface Options {
     uglify?: boolean;
 }
 
-export default function worker(opts: Options): Plugin;
+function worker(opts: Options): Plugin;
+
+export { worker };
+export default worker;
