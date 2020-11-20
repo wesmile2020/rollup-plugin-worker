@@ -1,5 +1,5 @@
 import path from 'path';
-import rollup from 'rollup';
+import * as rollup from 'rollup';
 import uglify from 'uglify-js';
 
 interface Options {
