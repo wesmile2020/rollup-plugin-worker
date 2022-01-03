@@ -16,7 +16,7 @@ function createWorker(file: string) {
             this._worker.removeEventListener(type, listener, options);
         }
 
-        postMessage(message: any, options?: PostMessageOptions) {
+        postMessage(message: any, options?: any) {
             this._worker.postMessage(message, options);
         }
 

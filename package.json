@@ -1,12 +1,11 @@
 {
   "name": "rollup-plugin-worker",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "a rollup plugin for worker",
   "main": "dist/index.js",
-  "types": "typings.d.ts",
-  "directories": {
-    "dist": "dist"
-  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "release": "npm run build && npm publish"
@@ -28,10 +27,9 @@
     "rollup": "^2.33.3"
   },
   "dependencies": {
-    "uglify-js": "^3.11.6"
+    "terser": "^5.10.0"
   },
   "devDependencies": {
-    "@types/node": "^14.14.9",
-    "@types/uglify-js": "^3.11.1"
+    "@types/node": "^14.14.9"
   }
 }

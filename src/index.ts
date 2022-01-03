@@ -1,6 +1,6 @@
 import path from 'path';
 import * as rollup from 'rollup';
-import uglify from 'uglify-js';
+import terser from 'terser';
 
 interface Options {
     prefix?: string;
@@ -42,7 +42,7 @@ function worker(options: Options): rollup.Plugin {
                     format: 'iife',
                     name: id,
                 })
-            }).then((file) => {
+            }).then(async (file) => {
                 let chunk: rollup.OutputChunk | null = null;
                 for (let i = 0; i < file.output.length; i += 1) {
                     if (file.output[i].type === 'chunk') {
@@ -54,7 +54,11 @@ function worker(options: Options): rollup.Plugin {
                 for (let i = 0; i < deps.length; i += 1) {
                     this.addWatchFile(deps[i]);
                 }
-                const workerCode = opts.uglify ? uglify.minify(chunk.code) : chunk.code;
+                let workerCode = chunk.code;
+                if (opts.uglify) {
+                    const uglify = await terser.minify(chunk.code);
+                    workerCode = uglify.code || '';
+                }
                 const code = [
                     `import createWorker from 'rollup-plugin-worker/dist/worker-helper';`,
                     `export default createWorker(`,
