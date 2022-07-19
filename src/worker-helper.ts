@@ -1,11 +1,17 @@
-function createWorker(file: string) {
-    class WebWorker {
-        private _url: string;
+import { IWorker } from './type';
+
+function createWorker(file: string): typeof IWorker {
+    const url = URL.createObjectURL(new Blob([file]));
+
+    class WebWorker implements IWorker {
         private _worker: Worker;
 
         constructor() {
-            this._url = URL.createObjectURL(new Blob([file]));
-            this._worker = new Worker(this._url);
+            this._worker = new Worker(url);
+        }
+
+        dispatchEvent(event: Event): boolean {
+            return this._worker.dispatchEvent(event);
         }
 
         addEventListener<K extends keyof WorkerEventMap>(type: K, listener: (this: Worker, ev: WorkerEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
@@ -22,7 +28,7 @@ function createWorker(file: string) {
 
         terminate() {
             this._worker.terminate();
-            URL.revokeObjectURL(this._url);
+            URL.revokeObjectURL(url);
         }
 
         get onmessage() {

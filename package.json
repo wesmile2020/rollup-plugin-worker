@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "sh scripts/build.sh",
     "release": "npm run build && npm publish"
   },
   "repository": {
