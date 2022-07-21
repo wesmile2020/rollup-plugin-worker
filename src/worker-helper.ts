@@ -1,13 +1,13 @@
 import { IWorker } from './type';
 
 function createWorker(file: string): typeof IWorker {
-    const url = URL.createObjectURL(new Blob([file]));
-
     class WebWorker implements IWorker {
         private _worker: Worker;
+        private _url: string;
 
         constructor() {
-            this._worker = new Worker(url);
+            this._url = URL.createObjectURL(new Blob([file]));
+            this._worker = new Worker(this._url);
         }
 
         dispatchEvent(event: Event): boolean {
@@ -28,7 +28,7 @@ function createWorker(file: string): typeof IWorker {
 
         terminate() {
             this._worker.terminate();
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(this._url);
         }
 
         get onmessage() {
