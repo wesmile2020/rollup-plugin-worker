@@ -1,7 +1,5 @@
-import { IWorker } from './type';
-
-function createWorker(file: string): typeof IWorker {
-    class WebWorker implements IWorker {
+function createWorker(file: string): typeof Worker {
+    class WebWorker {
         private _worker: Worker;
         private _url: string;
 
@@ -56,7 +54,7 @@ function createWorker(file: string): typeof IWorker {
         }
     }
 
-    return WebWorker;
+    return WebWorker as unknown as (typeof Worker);
 }
 
 export default createWorker;

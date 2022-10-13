@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "sh scripts/build.sh",
+    "build": "tsc",
     "release": "npm run build && npm publish"
   },
   "repository": {
@@ -24,12 +24,12 @@
   },
   "homepage": "https://github.com/wesmile2020/rollup-plugin-worker#readme",
   "peerDependencies": {
-    "rollup": "^2.33.3"
+    "rollup": "^3.0.0"
   },
   "dependencies": {
-    "terser": "^5.10.0"
+    "terser": "^5.15.1"
   },
   "devDependencies": {
-    "@types/node": "^14.14.9"
+    "@types/node": "^18.8.5"
   }
 }

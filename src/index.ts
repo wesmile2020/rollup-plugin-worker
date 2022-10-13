@@ -34,6 +34,15 @@ function worker(options: Options): rollup.Plugin {
 
         load(id) {
             if (!paths.has(id)) return null;
+            // this.getModuleInfo(id).
+            const code = [
+                `import createWorker from 'rollup-plugin-worker/dist/worker-helper';`,
+                `export default createWorker(`,
+                JSON.stringify(`onmessage = (e) => { console.log(e) }`),
+                ')',
+            ];
+            return code.join('\n');
+
             return rollup.rollup({
                 input: id,
                 plugins: opts.plugins,
