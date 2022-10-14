@@ -24,7 +24,7 @@ function worker(options: Options): rollup.Plugin {
         resolveId(source, importer) {
             if (source.startsWith(opts.prefix)) {
                 const name = source.slice(opts.prefix.length);
-                if (!importer) return name; 
+                if (!importer) return name;
                 const target = path.resolve(path.dirname(importer), name);
                 paths.add(target);
                 return target;
@@ -32,52 +32,49 @@ function worker(options: Options): rollup.Plugin {
             return null;
         },
 
-        load(id) {
-            if (!paths.has(id)) return null;
-            // this.getModuleInfo(id).
-            const code = [
-                `import createWorker from 'rollup-plugin-worker/dist/worker-helper';`,
-                `export default createWorker(`,
-                JSON.stringify(`onmessage = (e) => { console.log(e) }`),
-                ')',
-            ];
-            return code.join('\n');
 
-            return rollup.rollup({
-                input: id,
-                plugins: opts.plugins,
-            }).then((builder) => {
-                return builder.generate({
+        load: {
+            order: 'post',
+            async handler(id) {
+                if (!paths.has(id)) return null;
+                const builder = await rollup.rollup({
+                    input: id,
+                    plugins: opts.plugins,
+                });
+                const { output } = await builder.generate({
                     format: 'iife',
                     name: id,
-                })
-            }).then(async (file) => {
+                });
                 let chunk: rollup.OutputChunk | null = null;
-                for (let i = 0; i < file.output.length; i += 1) {
-                    if (file.output[i].type === 'chunk') {
-                        chunk = <rollup.OutputChunk>file.output[i];
+                for (let i = 0; i < output.length; i += 1) {
+                    if (output[i].type === 'chunk') {
+                        chunk = output[i] as rollup.OutputChunk;
                     }
                 }
-                if (!chunk) return null;
-                const deps = Object.keys(chunk.modules);
-                for (let i = 0; i < deps.length; i += 1) {
-                    this.addWatchFile(deps[i]);
+                let workerCode = '';
+                if (chunk) {
+                    workerCode = chunk.code;
+                    const deps = Object.keys(chunk.modules);
+                    for (let i = 0; i < deps.length; i += 1) {
+                        this.addWatchFile(deps[i]);
+                    }
                 }
-                let workerCode = chunk.code;
                 if (opts.uglify) {
-                    const uglify = await terser.minify(chunk.code);
+                    const uglify = await terser.minify(workerCode)
                     workerCode = uglify.code || '';
                 }
+
                 const code = [
                     `import createWorker from 'rollup-plugin-worker/dist/worker-helper';`,
                     `export default createWorker(`,
                     JSON.stringify(workerCode),
                     ')',
                 ];
-                return Promise.resolve(code.join('\n'));
-            });
-        }
-    }
+
+                return code.join('\n');
+            },
+        },
+    };
 }
 
 export { worker };
