@@ -63,9 +63,9 @@ function worker(options: Options): rollup.Plugin {
                     const uglify = await terser.minify(workerCode)
                     workerCode = uglify.code || '';
                 }
-
+                const helperPath = path.resolve(__dirname, 'worker-helper');
                 const code = [
-                    `import createWorker from 'rollup-plugin-worker/dist/worker-helper';`,
+                    `import createWorker from ${JSON.stringify(helperPath)};`,
                     `export default createWorker(`,
                     JSON.stringify(workerCode),
                     ')',

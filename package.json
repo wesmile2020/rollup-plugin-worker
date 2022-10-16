@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-worker",
-  "version": "3.0.0",
+  "version": "3.0.3",
   "description": "a rollup plugin for worker",
   "main": "dist/index.js",
   "files": [
