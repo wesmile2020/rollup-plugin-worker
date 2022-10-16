@@ -1,6 +1,7 @@
 import path from 'path';
 import * as rollup from 'rollup';
 import terser from 'terser';
+import { generateUUID } from './utils';
 
 interface Options {
     prefix?: string;
@@ -16,7 +17,7 @@ const defaultOptions = {
 
 function worker(options: Options): rollup.Plugin {
     const opts = { ...defaultOptions, ...options };
-    const paths: Set<string> = new Set();
+    const paths: Map<string, string> = new Map();
 
     return {
         name: 'rollup-plugin-worker',
@@ -24,10 +25,10 @@ function worker(options: Options): rollup.Plugin {
         resolveId(source, importer) {
             if (source.startsWith(opts.prefix)) {
                 const name = source.slice(opts.prefix.length);
-                if (!importer) return name;
-                const target = path.resolve(path.dirname(importer), name);
-                paths.add(target);
-                return target;
+                const id = importer ? path.resolve(path.dirname(importer), name) : name;
+                const uuid = generateUUID();
+                paths.set(uuid, id);
+                return uuid;
             }
             return null;
         },
@@ -38,12 +39,11 @@ function worker(options: Options): rollup.Plugin {
             async handler(id) {
                 if (!paths.has(id)) return null;
                 const builder = await rollup.rollup({
-                    input: id,
+                    input: paths.get(id),
                     plugins: opts.plugins,
                 });
                 const { output } = await builder.generate({
                     format: 'iife',
-                    name: id,
                 });
                 let chunk: rollup.OutputChunk | null = null;
                 for (let i = 0; i < output.length; i += 1) {
