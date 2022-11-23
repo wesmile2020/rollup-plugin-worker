@@ -44,6 +44,7 @@ function worker(options: Options): rollup.Plugin {
                 });
                 const { output } = await builder.generate({
                     format: 'iife',
+                    name: 'worker',
                 });
                 let chunk: rollup.OutputChunk | null = null;
                 for (let i = 0; i < output.length; i += 1) {
